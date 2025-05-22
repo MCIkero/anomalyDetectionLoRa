@@ -146,10 +146,9 @@ Nach Abschluss liegen im *OutputData*‑Ordner u. a.:
 
 ## Reproduzierbarkeit
 
-1. Lade den oben genannten Datensatz in die entsprechenden *Data*‑Unterordner.
-2. Passe Pfadkonstanten in *main.py* an.
-3. Führe das Skript aus.
-4. Vergleiche erzeugte Logs & Plots mit im Thesis‑Anhang dokumentierten Referenzwerten.
+1. Passe Pfadkonstanten in *main.py* an.
+2. Führe das Skript aus.
+3. Vergleiche erzeugte Logs & Plots mit im Thesis‑Anhang dokumentierten Referenzwerten.
 
 ---
 
