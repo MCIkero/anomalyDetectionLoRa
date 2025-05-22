@@ -1,4 +1,4 @@
-# Bachelorarbeit – **Hybrid Anomalie‑Erkennung in LoRaWAN‑Sensornetzen**
+# Bachelorarbeit – **Anomalie Erkennung in einem LoRaWANNetzwerk**
 
 > *Python 3.12.7 · entwickelt in PyCharm 2024.1*
 
@@ -50,6 +50,7 @@ PythonProject/
 | **OS**     | Windows 10/11 oder Linux (Ubuntu 22 LTS) |
 
 ### Python‑Abhängigkeiten
+
 Manuelle Installation
 
 ```bash
