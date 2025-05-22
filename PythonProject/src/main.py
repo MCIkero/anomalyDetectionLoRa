@@ -21,7 +21,7 @@ signalNormal2 = "../Data/trainData/signalNormal2.txt"
 jammingNormal = "../Data/trainData/jammingNormal.csv"
 
 outputdir = "../Data/OutputData/"
-IKBPrediction = "../Data/InfluxDataIKB.json"
+IKBPrediction = "../Data/predictData/InfluxDataIKB.json"
 
 signalPrediction = "../Data/predictData/signalPrediction.txt"
 jammingPrediction = "../Data/predictData/jammingPrediction.csv"
