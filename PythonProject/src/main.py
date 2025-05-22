@@ -7,7 +7,7 @@ from src.IsolationForestAlgo import IsolationForestExperiment, evaluate_iforest_
 from src.NearestNeighbor import NearestNeighbor, evaluate_nn_results, NearestNeighborGridSearch
 from src.Timedif import K_MeansTimedif
 from src.clusterPlot import plot_point_anomalies_plotly, plot_anomaly_overlap, load_and_prepare, plot_evaluation_curve, \
-    plot_model_performance
+    plot_model_performance, plot_static_3d_clusters
 from src.filtering import filteredData
 from src.others import create_interactive_layered_map
 from src.rulebased import duplicatePayload, rule_based_filter, find_best_rule_thresholds_with_heatmap
@@ -74,14 +74,14 @@ def startnn():
         file=df,
         outputdir=outputdir,
         radius_range=(3.0, 3.01, 0.01),
-        min_neighbors_range=(9, 10),
+        min_neighbors_range=(10, 16),
         df_ground_truth=df_ground_truth
     )
 
     nn_results, nn_perf = NearestNeighbor(df, outputdir, save_video=False, mode="predict")
 
     if nn_results is not None:
-        best_nn_result = nn_results[2]
+        best_nn_result = nn_results[1]
         nn_anomalies = best_nn_result[best_nn_result["anomaly"] == -1]
 
         #Flags im Original-DataFrame setzen
@@ -120,7 +120,7 @@ def startDBSCAN():
     DbscanGridSearch(
         file=df,
         outputdir=outputdir,
-        eps_range=(0.1, 1.01, 0.05),
+        eps_range=(1.0, 2.01, 0.5),
         min_samples_list=[10, 30, 50, 70, 90],
         df_ground_truth=df_ground_truth
     )
@@ -129,7 +129,7 @@ def startDBSCAN():
     dbscan_results, dbscan_perf = DbscanAlgorithm(df, outputdir, save_video=False)
     df_eval_dbscan = evaluate_dbscan_results(dbscan_results, df_ground_truth)
     if dbscan_results is not None:
-        best_dbscan_result = dbscan_results[16]
+        best_dbscan_result = dbscan_results[0]
         dbscan_anomalies = best_dbscan_result[best_dbscan_result["cluster"] == -1]
 
         #ML-Flag zusätzlich mit DBSCAN-Anomalien kombinieren
@@ -172,7 +172,7 @@ def startIsolation():
 
     # Index-Abgleich und Evaluierung
     if iso_results is not None:
-        pred_df = iso_results[0]
+        pred_df = iso_results[2]
         common_idx = pred_df.index.intersection(df_ground_truth.index)
         if len(common_idx) < len(pred_df):
             print(f"Nur {len(common_idx)} von {len(pred_df)} Vorhersagen stimmen mit Ground Truth überein.")
@@ -211,7 +211,7 @@ def startIsolation():
 
 
 if __name__ == '__main__':
-    df = filteredData(single_file=signalPrediction, dir=outputdir)
+    df = filteredData(single_file=IKBPrediction, dir=outputdir)
     df_train = filteredData(folder_path=folderTrain, dir=outputdir)
 
     if "fcnt" in df.columns and "fCnt" not in df.columns:
@@ -234,8 +234,21 @@ if __name__ == '__main__':
     #heatmap(frame=df, outputdir=outputdir+"IsolationForest/",ml_col="ml_flag_iforest")
 
     df["ml_flag"] = df[["ml_flag_nn", "ml_flag_dbscan", "ml_flag_iforest"]].any(axis=1)
-    df["anomaly_combined"] = df[["rule_flag", "ml_flag"]].any(axis=1)
-    #create_interactive_layered_map(df, os.path.join(outputdir, "interactive_layered.html"))
+    df["anomaly_combined"] = df["rule_flag"] & df["ml_flag_iforest"]
+
+    create_interactive_layered_map(df, os.path.join(outputdir, "interactive_layered.html"))
+
+    df["hybrid_anomaly_plot"] = df["anomaly_combined"].apply(lambda x: -1 if x == 1 else 1)
+
+    plot_static_3d_clusters(
+        df=df,
+        x="rssi",
+        y="snr",
+        z="spreading_factor",
+        label_column="hybrid_anomaly_plot",
+        title="Hybride Anomalieerkennung – Regelbasiert & ML kombiniert",
+        save_path=os.path.join(outputdir, "hybrid_detection_3d_IKB.png")
+    )
 
     load_and_prepare("../Data/OutputData/DBSCAN/performance_log_DBSCAN.csv", "eps")
     load_and_prepare("../Data/OutputData/IsolationForest/performance_log_IF.csv", "contamination")

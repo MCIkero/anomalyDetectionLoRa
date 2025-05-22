@@ -36,13 +36,23 @@ def K_MeansTimedif(file, outputdir):
     kmeans = KMeans(n_clusters=k, random_state=42)
     file.loc[:, 'cluster'] = kmeans.fit_predict(time_diff)
 
+    # Durchschnittliche Zeitdifferenz pro Cluster
+    cluster_means = file.groupby("cluster")["time_difference"].mean()
+
+    # Den Cluster mit der höchsten durchschnittlichen Zeitdifferenz als "Anomalie-Cluster"
+    anomaly_cluster = cluster_means.idxmax()
+
+    file["rule_timedif_cluster"] = (file["cluster"] == anomaly_cluster)
+
     y_values = np.random.uniform(-1, 1, size=len(file))
     plt.scatter(file["time_difference"], y_values, c=file["cluster"], cmap="viridis", marker="o")
     plt.title("KMeans Clustering")
     plt.xlabel("Zeitdifferenz (s)")
     plt.ylabel("Relative Position (zufällig)")
     plt.colorbar(label="Cluster")
-    plt.savefig(os.path.join(outputdir, "Timedif.png"), dpi=300)
+    plt.savefig(os.path.join(outputdir, "Timedif.png"), dpi=200)
     plt.close()
 
     file.to_csv(os.path.join(outputdir, 'ZeitdifferenzAnomalien.csv'), index=False)
+
+    return file

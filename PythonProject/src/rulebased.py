@@ -23,8 +23,13 @@ def rule_based_filter(df, save_path=None):
     df["time"] = pd.to_datetime(df["time"], errors="coerce")
     df["time_diff_device"] = df.groupby("device_address")["time"].diff().dt.total_seconds().fillna(0)
 
+    if "rule_timedif_cluster" in df.columns:
+        df["rule_time"] = df["rule_timedif_cluster"]
+    else:
+        df["rule_time"] = False
+
     # 99. Perzentil pro Gerät berechnen und jeder Zeile zuweisen
-    df["time_thresh_device"] = df.groupby("device_address")["time_diff_device"].transform(lambda x: x.quantile(0.95))
+    df["time_thresh_device"] = df.groupby("device_address")["time_diff_device"].transform(lambda x: x.quantile(0.999))
 
     # Bedingung: Zeitdifferenz == 0 oder größer als gerätespezifisches 99%-Perzentil
     time_condition = (df["time_diff_device"] > df["time_thresh_device"])
@@ -43,7 +48,7 @@ def rule_based_filter(df, save_path=None):
     df["rule_rssi"] = df["rssi"] < -130
     df["rule_snr"] = df["snr"] < -20
     df["rule_fcnt"] = frame_jump_condition
-    df["rule_time"] = time_condition
+    #df["rule_time"] = time_condition
     df["rule_orphan"] = orphan_condition
     df["rule_sf_change"] = sf_change_condition
 
@@ -53,9 +58,9 @@ def rule_based_filter(df, save_path=None):
             df["rule_rssi"] |
             df["rule_snr"] |
             df["rule_fcnt"] |
-            df["rule_time"] |
             df["rule_orphan"] |
-            df["rule_sf_change"]
+            df["rule_sf_change"] |
+            df["rule_time"]
     )
 
     # Analyse und Plot

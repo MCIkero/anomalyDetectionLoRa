@@ -12,7 +12,7 @@ from src.others import prepare_output_dir
 import psutil
 import tracemalloc
 
-def DbscanAlgorithm(file, outputdir, eps_range=(0.05, 0.9, 0.05), min_samples=50, save_video=False, show_plot=True):
+def DbscanAlgorithm(file, outputdir, eps_range=(1.0, 3.1, 0.5), min_samples=50, save_video=False, show_plot=True):
 
     print(f"DBSCAN Algorithmus im gestartet")
 
@@ -73,7 +73,7 @@ def DbscanAlgorithm(file, outputdir, eps_range=(0.05, 0.9, 0.05), min_samples=50
                 x="rssi",
                 y="snr",
                 z="spreading_factor",
-                label_column="spreading_factor",
+                label_column="anomaly",
                 title=f"DBSCAN – Eps {eps_rounded}",
                 save_path=filename_static
             )
@@ -85,7 +85,7 @@ def DbscanAlgorithm(file, outputdir, eps_range=(0.05, 0.9, 0.05), min_samples=50
                 x="rssi",
                 y="snr",
                 z="spreading_factor",
-                label_column="spreading_factor",
+                label_column="anomaly",
                 title=f"DBSCAN – Eps {eps_rounded}",
                 interval=50,
                 save_path=filename_video,

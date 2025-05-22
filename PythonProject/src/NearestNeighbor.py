@@ -11,7 +11,7 @@ from sklearn.metrics import precision_score, f1_score, recall_score
 from clusterPlot import plot_3d_clusters_animation, plot_static_3d_clusters
 from src.others import prepare_output_dir
 
-def NearestNeighbor(file, outputdir, radius_range=(3.4, 3.48, 0.01), min_neighbors=10, save_video=False, show_plot=True, mode="train"):
+def NearestNeighbor(file, outputdir, radius_range=(3.0, 5.01, 0.5), min_neighbors=10, save_video=False, show_plot=True, mode="train"):
 
     print(f"Nearest Neighbor Algorithmus im {mode} Modus gestartet")
 
@@ -81,7 +81,7 @@ def NearestNeighbor(file, outputdir, radius_range=(3.4, 3.48, 0.01), min_neighbo
                     plot_static_3d_clusters(
                         df=df_result,
                         x="rssi", y="snr", z="spreading_factor",
-                        label_column="spreading_factor",
+                        label_column="anomaly",
                         title=f"Nearest Neighbors – Radius {round(radius, 3)}",
                         save_path=filename_static
                     )

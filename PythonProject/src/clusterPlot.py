@@ -127,7 +127,7 @@ def plot_static_3d_clusters(df, x, y, z, label_column, title="3D Cluster Plot", 
 
         #Anomalien immer zuletzt rot drüberzeichnen
     if "anomaly" in df.columns:
-        anomalies = df[df["anomaly"] == -1]
+        anomalies = df[df[label_column] == -1]
         if not anomalies.empty:
             ax.scatter(
                 anomalies[x],
@@ -151,7 +151,7 @@ def plot_static_3d_clusters(df, x, y, z, label_column, title="3D Cluster Plot", 
     ax.set_title(title)
 
     if save_path:
-        plt.savefig(save_path, dpi=300)
+        plt.savefig(save_path, dpi=200)
         print(f"Plot gespeichert unter: {save_path}")
     else:
         plt.show(block=False)
