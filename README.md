@@ -148,7 +148,7 @@ Nach Abschluss liegen im *OutputData*‑Ordner u. a.:
 
 1. Passe Pfadkonstanten in *main.py* an.
 2. Führe das Skript aus.
-3. Vergleiche erzeugte Logs & Plots mit im Thesis‑Anhang dokumentierten Referenzwerten.
+3. Vergleiche erzeugte Logs & Plots.
 
 ---
 
