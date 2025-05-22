@@ -50,8 +50,7 @@ PythonProject/
 | **OS**     | Windows 10/11 oder Linux (Ubuntu 22 LTS) |
 
 ### Python‑Abhängigkeiten
-
-Ein *requirements.txt* ist beigelegt, kann aber auch manuell installiert werden:
+Manuelle Installation
 
 ```bash
 pip install pandas numpy scikit-learn matplotlib seaborn plotly folium matplotlib-venn psutil joblib tqdm
